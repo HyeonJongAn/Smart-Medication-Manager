@@ -29,6 +29,11 @@ activity_medicregister.xml
             android:layout_gravity="center"
             android:background="@drawable/green_border">
 
+            <androidx.camera.view.PreviewView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:visibility="invisible"/>
             <TextView
                 android:id="@+id/OCRTextResult"
                 android:layout_width="match_parent"
@@ -49,16 +54,16 @@ activity_medicregister.xml
             </ImageView>
         </FrameLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="코드 추출 버튼을 누른 후\n화면에 뜬 코드와 처방전에 있는 코드가\n일치하는지
-확인해주세요"
-            android:textSize="15dp"
-            android:textColor="@color/black"
-            />
-
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnCameraStart"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/green_border"
+            android:text="시작하기"
+            android:textColor="#036635"
+            android:textSize="20dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
