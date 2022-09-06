@@ -27,6 +27,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ImageCapture;
+import androidx.camera.lifecycle.ProcessCameraProvider;
+import androidx.camera.view.PreviewView;
 import androidx.core.content.FileProvider;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
@@ -49,14 +53,24 @@ import java.util.Date;
 public class MedicRegisterActivity extends AppCompatActivity {
 
     Bitmap image;//사용되는 이미지
+    Bitmap bitmap;
+    Bitmap rotatedBitmap;
+
     private TessBaseAPI mTess;//Tess API Reference
     String datapath="";//언어데이터가 있는 경로
+
+    PreviewView previewView;//프리뷰
+    Button btnStartCamera;//앱 내부에서 카메라 시작하기 버튼
 
     Button btnCamera;//카메라버튼
     ImageView pictureImage;//사진 표시하는 이미지뷰
 
     Button btnOCR;//OCR버튼
     TextView OCRTextView;//OCR한 EDI 코드 목록을 표시하는 TextView
+
+    ProcessCameraProvider processCameraProvider;
+    int lensFacing= CameraSelector.LENS_FACING_BACK;
+    ImageCapture imageCapture;
 
     Uri photoUri;
     String OCRresult;
