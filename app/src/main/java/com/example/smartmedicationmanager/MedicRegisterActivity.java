@@ -6,31 +6,43 @@
  ***************************/
 package com.example.smartmedicationmanager;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Camera;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.AspectRatio;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
+import androidx.camera.core.ImageProxy;
+import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
@@ -49,6 +61,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 public class MedicRegisterActivity extends AppCompatActivity {
 
@@ -111,6 +124,8 @@ public class MedicRegisterActivity extends AppCompatActivity {
 
         userData = (UserData)getApplicationContext();
         myHelper = new com.example.smartmedicationmanager.MedicDBHelper(this);
+        previewView=(PreviewView)findViewById(R.id.previewView);
+        btnStartCamera=(Button)findViewById(R.id.btnCameraStart);
         btnCamera=(Button) findViewById(R.id.btnPicture);
         btnOCR=(Button)findViewById(R.id.btnOCR);
         btnRegister=(Button)findViewById(R.id.regimedicbtn);
@@ -134,7 +149,35 @@ public class MedicRegisterActivity extends AppCompatActivity {
         mTess.setVariable(TessBaseAPI.VAR_CHAR_BLACKLIST, ".,!?@#$%&*()<>_-+=/:;'\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
         mTess.setVariable(TessBaseAPI.VAR_CHAR_WHITELIST, "0123456789");
 
+        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CAMERA},1);
 
+        try{
+            processCameraProvider=processCameraProvider.getInstance(this).get();
+        }
+        catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        //카메라 프리뷰 작동
+        btnStartCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(ActivityCompat.checkSelfPermission(MedicRegisterActivity.this,Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED){
+                    previewView.setVisibility(View.VISIBLE);
+                    OCRTextView.setVisibility(View.INVISIBLE);
+
+                    bindPreview();
+                    bindImageCapture();
+
+                }
+            }
+        });
+
+        /*
         //카메라에 접근해 사진 찍는 버튼
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,8 +187,44 @@ public class MedicRegisterActivity extends AppCompatActivity {
                 OCRTextView.setVisibility(View.INVISIBLE);
             }
         });
+        */
+
+        btnCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageCapture.takePicture(ContextCompat.getMainExecutor(MedicRegisterActivity.this),
+                        new ImageCapture.OnImageCapturedCallback() {
+                            @Override
+                            public void onCaptureSuccess(@NonNull ImageProxy image) {
+                                @SuppressLint("UnsafeExperimentalUsageError")
+                                Image mediaImage = image.getImage();
+                                bitmap = ImageUtil.mediaImageToBitmap(mediaImage);
 
 
+                                Log.d("MainActivity", Integer.toString(bitmap.getWidth())); //4128
+                                Log.d("MainActivity", Integer.toString(bitmap.getHeight())); //3096
+
+                                //imageView.setImageBitmap(bitmap);
+                                rotatedBitmap = ImageUtil.rotateBitmap(bitmap, image.getImageInfo().getRotationDegrees());
+
+                                Log.d("MainActivity", Integer.toString(rotatedBitmap.getWidth())); //3096
+                                Log.d("MainActivity", Integer.toString(rotatedBitmap.getHeight())); //4128
+                                Log.d("MainAtivity", Integer.toString(image.getImageInfo().getRotationDegrees()));
+                                //90 //0, 90, 180, 90 //이미지를 바르게 하기위해 시계 방향으로 회전해야할 각도
+
+                                processCameraProvider.unbindAll();//카메라 프리뷰 중단
+                                pictureImage.setImageBitmap(rotatedBitmap);
+                                previewView.setVisibility(View.INVISIBLE);
+                                pictureImage.setVisibility(View.VISIBLE);
+
+                                super.onCaptureSuccess(image);
+                            }
+                        });
+            }
+        });
+
+
+        /*
         //OCR로 EDI_Code 추출하는 버튼
         btnOCR.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,6 +250,21 @@ public class MedicRegisterActivity extends AppCompatActivity {
 
                 Toast.makeText(getApplicationContext(), "화면의 코드와 처방전의 코드가 일치하는지 확인해주세요", Toast.LENGTH_LONG).show();
 
+            }
+        });
+        */
+
+        //OCR로 EDI_Code 추출하는 버튼
+        btnOCR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                OCRresult=null;
+
+                mTess.setImage(rotatedBitmap);
+
+                OCRresult=mTess.getUTF8Text();
+
+                OCRTextView.setText(OCRresult);
             }
         });
 
@@ -233,6 +327,28 @@ public class MedicRegisterActivity extends AppCompatActivity {
         });
     }
 
+    void bindPreview(){
+        previewView.setScaleType(PreviewView.ScaleType.FIT_CENTER);
+        CameraSelector cameraSelector = new CameraSelector.Builder()
+                .requireLensFacing(lensFacing)
+                .build();
+        Preview preview = new Preview.Builder()
+                .setTargetAspectRatio(AspectRatio.RATIO_16_9)
+                .build();
+        preview.setSurfaceProvider(previewView.getSurfaceProvider());
+        processCameraProvider.bindToLifecycle(this,cameraSelector,preview);
+    }
+
+    void bindImageCapture(){
+        CameraSelector cameraSelector=new CameraSelector.Builder()
+                .requireLensFacing(lensFacing)
+                .build();
+        imageCapture=new ImageCapture.Builder()
+                .build();
+
+        processCameraProvider.bindToLifecycle(this,cameraSelector,imageCapture);
+    }
+
     //Xml에서 데이터 가져오기
     String getXmlData(String edicode){
         StringBuffer buffer=new StringBuffer();
@@ -282,6 +398,7 @@ public class MedicRegisterActivity extends AppCompatActivity {
         return buffer.toString();
     }
 
+    /*
     //상수를 받아 각도를 변환
     private int exifOrientationToDegrees(int exifOrientation) {
         if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
@@ -364,6 +481,8 @@ public class MedicRegisterActivity extends AppCompatActivity {
         return image;
     }
 
+     */
+
     //스마트폰에 사진 파일 복사
     private void copyFiles(String lang){
         try{
@@ -403,4 +522,5 @@ public class MedicRegisterActivity extends AppCompatActivity {
             }
         }
     }
+
 }
