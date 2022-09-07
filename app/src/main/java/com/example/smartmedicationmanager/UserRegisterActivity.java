@@ -28,7 +28,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class UserRegisterActivity extends AppCompatActivity{
-    com.example.smartmedicationmanager.MedicDBHelper myHelper;
+    com.example.smartmedicationmanager.UserDBHelper myHelper;
     SQLiteDatabase sqlDB;
     EditText E_ID, E_Pass, E_Name;
     RadioGroup RG;
@@ -62,7 +62,7 @@ public class UserRegisterActivity extends AppCompatActivity{
         btnBirthChoose = (Button) findViewById(R.id.BtnBirthChoose);
         btnComplete = (Button) findViewById(R.id.BtnComplete);
 
-        myHelper = new com.example.smartmedicationmanager.MedicDBHelper(this);
+        myHelper = new com.example.smartmedicationmanager.UserDBHelper(this);
 
         /* 오늘 날짜 계산 */
         Date todayDate = Calendar.getInstance().getTime();
