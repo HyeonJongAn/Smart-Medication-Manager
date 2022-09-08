@@ -80,7 +80,7 @@ public class MedicRegisterActivity extends AppCompatActivity {
     Button btnCamera;//카메라버튼
     //ImageView pictureImage;//사진 표시하는 이미지뷰
 
-    Button btnOCR;//OCR버튼
+    //Button btnOCR;//OCR버튼
     TextView OCRTextView;//OCR한 EDI 코드 목록을 표시하는 TextView
 
     ProcessCameraProvider processCameraProvider;
@@ -129,7 +129,7 @@ public class MedicRegisterActivity extends AppCompatActivity {
         previewView=(PreviewView)findViewById(R.id.previewView);
         btnStartCamera=(Button)findViewById(R.id.btnCameraStart);
         btnCamera=(Button) findViewById(R.id.btnPicture);
-        btnOCR=(Button)findViewById(R.id.btnOCR);
+        //btnOCR=(Button)findViewById(R.id.btnOCR);
         btnRegister=(Button)findViewById(R.id.regimedicbtn);
         OCRTextView=(TextView) findViewById(R.id.OCRTextResult);
         //pictureImage=(ImageView)findViewById(R.id.CameraPicture);
@@ -170,8 +170,11 @@ public class MedicRegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(ActivityCompat.checkSelfPermission(MedicRegisterActivity.this,Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED){
                     previewView.setVisibility(View.VISIBLE);
-
                     OCRTextView.setVisibility(View.INVISIBLE);
+                    btnStartCamera.setVisibility(View.INVISIBLE);
+                    btnStartCamera.setEnabled(false);
+                    btnCamera.setVisibility(View.VISIBLE);
+                    btnCamera.setEnabled(true);
 
                     bindPreview();
                     bindImageCapture();
@@ -298,6 +301,7 @@ public class MedicRegisterActivity extends AppCompatActivity {
         });
         */
 
+        /*
         //OCR로 EDI_Code 추출하는 버튼
         btnOCR.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -311,6 +315,7 @@ public class MedicRegisterActivity extends AppCompatActivity {
                 OCRTextView.setText(OCRresult);
             }
         });
+        */
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
