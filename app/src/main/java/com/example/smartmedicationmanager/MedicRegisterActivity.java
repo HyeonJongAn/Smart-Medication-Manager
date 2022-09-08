@@ -8,6 +8,7 @@ package com.example.smartmedicationmanager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -33,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.AspectRatio;
 import androidx.camera.core.CameraSelector;
@@ -76,7 +78,7 @@ public class MedicRegisterActivity extends AppCompatActivity {
     Button btnStartCamera;//앱 내부에서 카메라 시작하기 버튼
 
     Button btnCamera;//카메라버튼
-    ImageView pictureImage;//사진 표시하는 이미지뷰
+    //ImageView pictureImage;//사진 표시하는 이미지뷰
 
     Button btnOCR;//OCR버튼
     TextView OCRTextView;//OCR한 EDI 코드 목록을 표시하는 TextView
@@ -130,7 +132,7 @@ public class MedicRegisterActivity extends AppCompatActivity {
         btnOCR=(Button)findViewById(R.id.btnOCR);
         btnRegister=(Button)findViewById(R.id.regimedicbtn);
         OCRTextView=(TextView) findViewById(R.id.OCRTextResult);
-        pictureImage=(ImageView)findViewById(R.id.CameraPicture);
+        //pictureImage=(ImageView)findViewById(R.id.CameraPicture);
         btnBacktoMain=(Button)findViewById(R.id.btnback6);
 
 
@@ -168,6 +170,7 @@ public class MedicRegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(ActivityCompat.checkSelfPermission(MedicRegisterActivity.this,Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED){
                     previewView.setVisibility(View.VISIBLE);
+
                     OCRTextView.setVisibility(View.INVISIBLE);
 
                     bindPreview();
@@ -213,11 +216,52 @@ public class MedicRegisterActivity extends AppCompatActivity {
                                 //90 //0, 90, 180, 90 //이미지를 바르게 하기위해 시계 방향으로 회전해야할 각도
 
                                 processCameraProvider.unbindAll();//카메라 프리뷰 중단
-                                pictureImage.setImageBitmap(rotatedBitmap);
+                                //pictureImage.setImageBitmap(rotatedBitmap);
                                 previewView.setVisibility(View.INVISIBLE);
-                                pictureImage.setVisibility(View.VISIBLE);
+                                //pictureImage.setVisibility(View.VISIBLE);
 
                                 super.onCaptureSuccess(image);
+
+                                int height=rotatedBitmap.getHeight();
+                                int width=rotatedBitmap.getWidth();
+
+                                //AlertDialog에 사용할 비트맵 이미지의 사이즈를 가로세로 비율 맞춰 축
+                                Bitmap popupBitmap=Bitmap.createScaledBitmap(rotatedBitmap,1000,height/(width/1000),true);
+
+                                //카메라 바인딩 사용중단
+                                processCameraProvider.unbindAll();
+
+                                ImageView capturedimage = new ImageView(MedicRegisterActivity.this);
+                                capturedimage.setImageBitmap(popupBitmap);
+
+                                //사진 촬영 결과를 AlertDialog로 띄워 사용 여부를 선택한다
+                                AlertDialog.Builder captureComplete=new AlertDialog.Builder(MedicRegisterActivity.this)
+                                        .setTitle("촬영 결과")
+                                        .setMessage("이 사진을 사용할까요?")
+                                        .setView(capturedimage)
+                                        //사용을 선택할 경우 OCR 실행
+                                        .setPositiveButton("사용", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                String OCRresult=null;
+                                                mTess.setImage(rotatedBitmap);
+                                                OCRresult=mTess.getUTF8Text();
+
+                                                OCRTextView.setText(OCRresult);
+                                            }
+                                        })
+                                        //재촬영을 선택할 경우 bitmap에 저장된 비트맵 파일을 지우고 다시 카메라 프리뷰를 바인딩함
+                                        .setNegativeButton("재촬영", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                bitmap=null;
+                                                bindPreview();
+                                                bindImageCapture();
+                                                OCRTextView.setVisibility(View.INVISIBLE);
+                                                //pictureImage.setVisibility(View.INVISIBLE);
+                                                previewView.setVisibility(View.VISIBLE);
+                                            }
+                                        });
                             }
                         });
             }
@@ -333,7 +377,7 @@ public class MedicRegisterActivity extends AppCompatActivity {
                 .requireLensFacing(lensFacing)
                 .build();
         Preview preview = new Preview.Builder()
-                .setTargetAspectRatio(AspectRatio.RATIO_16_9)
+                .setTargetAspectRatio(AspectRatio.RATIO_4_3)
                 .build();
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
         processCameraProvider.bindToLifecycle(this,cameraSelector,preview);

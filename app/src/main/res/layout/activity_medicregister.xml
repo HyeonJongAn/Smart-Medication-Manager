@@ -48,12 +48,14 @@ activity_medicregister.xml
                 android:visibility="visible">
             </TextView>
 
+            <!--
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="500dp"
                 android:id="@+id/CameraPicture"
-                android:visibility="visible">
+                android:visibility="invisible">
             </ImageView>
+            -->
         </FrameLayout>
 
         <androidx.appcompat.widget.AppCompatButton
