@@ -265,6 +265,10 @@ public class MedicRegisterActivity extends AppCompatActivity {
                                                 previewView.setVisibility(View.VISIBLE);
                                             }
                                         });
+
+                                captureComplete.setCancelable(false);
+
+                                captureComplete.create().show();
                             }
                         });
             }
