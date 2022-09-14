@@ -81,7 +81,7 @@ public class MedicRegisterActivity extends AppCompatActivity {
     //ImageView pictureImage;//사진 표시하는 이미지뷰
 
     //Button btnOCR;//OCR버튼
-    TextView OCRTextView;//OCR한 EDI 코드 목록을 표시하는 TextView
+    TextView OCRTextView;//OCR한 EDI s코드 목록을 표시하는 TextView
 
     ProcessCameraProvider processCameraProvider;
     int lensFacing= CameraSelector.LENS_FACING_BACK;
