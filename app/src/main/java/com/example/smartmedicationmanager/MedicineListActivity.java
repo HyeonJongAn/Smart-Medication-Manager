@@ -11,13 +11,17 @@ import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -108,5 +112,37 @@ public class MedicineListActivity extends AppCompatActivity {
 
         cursor.close();
         sqlDB.close();
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNav);
+        bottomNavigationView.setSelectedItemId(R.id.articleNav);
+        //바텀네비게이션을 나타나게 해주는 함수
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId()){
+                    //home버튼을 누르면 액티비티 화면을 전환시켜준다
+                    case R.id.homeNav:
+                        startActivity(new Intent(getApplicationContext(), com.example.smartmedicationmanager.MainPageActivity.class));
+                        overridePendingTransition(0, 0);
+                        finish();
+                        return true;
+                    //camera 버튼을 누르면 액티비티 화면을 전환시켜준다.
+                    case R.id.cameraNav:
+                        startActivity(new Intent(getApplicationContext(), MedicRegisterActivity.class));
+                        overridePendingTransition(0, 0);
+                        finish();
+                        return true;
+                    //현재 화면에서 보여주는 액티비티
+                    case R.id.articleNav:
+                        return true;
+                    //user 버튼을 누르면 액티비티 화면을 전환시켜준다
+                    case R.id.userNav:
+                        startActivity(new Intent(getApplicationContext(), MyPageActivity.class));
+                        overridePendingTransition(0, 0);
+                        finish();
+                }
+                return false;
+            }
+        });
     }
 }

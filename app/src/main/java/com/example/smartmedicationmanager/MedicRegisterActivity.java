@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -47,6 +48,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.googlecode.tesseract.android.TessBaseAPI;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -369,13 +371,36 @@ public class MedicRegisterActivity extends AppCompatActivity {
             }
         });
 
-        //메인화면으로 복귀
-        btnBacktoMain.setOnClickListener(new View.OnClickListener() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNav);
+        bottomNavigationView.setSelectedItemId(R.id.cameraNav);
+        //바텀네비게이션을 나타나게 해주는 함수
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MedicRegisterActivity.this, com.example.smartmedicationmanager.MainPageActivity.class);
-                startActivity(intent);
-                finish();
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId()){
+                    //home 버튼을 누르면 액티비티 화면을 전환시켜준다
+                    case R.id.homeNav:
+                        startActivity(new Intent(getApplicationContext(), MainPageActivity.class));
+                        overridePendingTransition(0, 0);
+                        finish();
+                        return true;
+                    //현재 페이지에서 보여주는 액티비티
+                    case R.id.cameraNav:
+                        return true;
+                    //article 버튼을 누르면 액티비티 화면을 전환시켜준다
+                    case R.id.articleNav:
+                        startActivity(new Intent(getApplicationContext(), MedicineListActivity.class));
+                        overridePendingTransition(0, 0);
+                        finish();
+                        return true;
+                    //user 버튼을 누르면 액티비티 화면을 전환시켜준다.
+                    case R.id.userNav:
+                        startActivity(new Intent(getApplicationContext(), com.example.smartmedicationmanager.MyPageActivity.class));
+                        overridePendingTransition(0, 0);
+                        finish();
+                        return true;
+                }
+                return false;
             }
         });
     }

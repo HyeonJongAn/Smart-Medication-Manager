@@ -4,10 +4,11 @@ activity_medicregister.xml
 작성 팀 : Hello World!
 프로그램명 : Medication Helper
 -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainPageActivity"
     android:orientation="vertical">
 
@@ -25,7 +26,7 @@ activity_medicregister.xml
 
         <FrameLayout
             android:layout_width="300dp"
-            android:layout_height="500dp"
+            android:layout_height="300dp"
             android:layout_gravity="center"
             android:background="@drawable/green_border">
 
@@ -39,7 +40,7 @@ activity_medicregister.xml
             <TextView
                 android:id="@+id/OCRTextResult"
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="300dp"
                 android:text="이 곳에\n 사진과 목록이\n 표시됩니다"
                 android:gravity="center"
                 android:textAlignment="center"
@@ -153,8 +154,18 @@ activity_medicregister.xml
             android:text="뒤로 가기"
             android:textColor="#036635"
             android:textSize="25dp" />
-
-
     </LinearLayout>
 
-</ScrollView>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/white"
+        app:itemIconSize="30dp"
+        app:itemIconTint="@drawable/navcolor"
+        app:labelVisibilityMode="unlabeled"
+        app:menu="@menu/nav" />
+
+</RelativeLayout>

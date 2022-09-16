@@ -4,10 +4,10 @@ activity_medicinelist.xml
 작성 팀 : Hello World!
 프로그램명 : Medication Helper
 -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -29,8 +29,8 @@ activity_medicinelist.xml
             android:layout_width="300dp"
             android:layout_height="500dp"
             android:layout_gravity="center"
-            android:background="@drawable/green_border"
-            android:layout_marginBottom="5dp"/>
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/green_border" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -65,4 +65,16 @@ activity_medicinelist.xml
         </RelativeLayout>
     </LinearLayout>
 
-</ScrollView>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/white"
+        app:itemIconSize="30dp"
+        app:itemIconTint="@drawable/navcolor"
+        app:labelVisibilityMode="unlabeled"
+        app:menu="@menu/nav" />
+
+</RelativeLayout>
