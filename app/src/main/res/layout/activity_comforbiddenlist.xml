@@ -12,6 +12,7 @@ activity_comfordbiddenlist.xml
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_gravity="center_horizontal"
         android:orientation="vertical"
         >
 
@@ -38,7 +39,7 @@ activity_comfordbiddenlist.xml
             android:layout_height="50dp"
             android:textSize="30dp"
             android:text="약 선택하면 성분 표시"
-            android:layout_marginLeft="5dp"
+            android:layout_gravity="center_horizontal"
             android:padding="5dp"
             android:background="@drawable/green_border"/>
 
