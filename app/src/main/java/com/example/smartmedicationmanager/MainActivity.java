@@ -6,19 +6,30 @@
  ***************************/
 package com.example.smartmedicationmanager;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 public class MainActivity extends FragmentActivity {
     UserDBHelper myHelper;
@@ -61,14 +72,14 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_login);
-        setTitle("Medication Helper");
 
         userData = (UserData)getApplicationContext();
         EditText edtID = findViewById(R.id.editID);
         EditText edtPW = findViewById(R.id.editPW);
 
+        CheckBox checkBox = findViewById(R.id.autoLogin);
         Button btnlogin = findViewById(R.id.btnlogin);
-        Button btnsignin = findViewById(R.id.btnsignin);
+        TextView btnsignin = findViewById(R.id.btnsignin);
 
         myHelper = new UserDBHelper(this);
         btnlogin.setOnClickListener(new View.OnClickListener() {
@@ -113,6 +124,12 @@ public class MainActivity extends FragmentActivity {
                 }
             }
         });
+
+        // 자동 로그인 구현 부분분
+       if (checkBox.isChecked()) {
+            SharedPreferences sharedPreferences = getSharedPreferences("sharedPreferences", Activity.MODE_PRIVATE);
+        }
+
         btnsignin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

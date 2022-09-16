@@ -40,9 +40,9 @@
         <activity android:name=".DuplicateListActivity" />
         <activity android:name=".PregnantForbiddenListActivity" />
         <activity android:name=".MainPageActivity" />
-        <activity android:name=".WebActivity" />
         <activity android:name=".MyPageActivity" />
         <activity android:name=".UserRegisterActivity" />
+        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-2721080471277714~3179912396"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

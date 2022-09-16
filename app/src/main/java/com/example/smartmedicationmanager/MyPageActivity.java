@@ -97,15 +97,20 @@ public class MyPageActivity extends AppCompatActivity{
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()){
-                    //page버튼을 누르면 액티비티 화면을 전환시켜준다
-                    case R.id.pageNav:
-                        startActivity(new Intent(getApplicationContext(), WebActivity.class));
-                        overridePendingTransition(0, 0);
-                        finish();
-                        return true;
                     //home버튼을 누르면 액티비티 화면을 전환시켜준다
                     case R.id.homeNav:
                         startActivity(new Intent(getApplicationContext(), com.example.smartmedicationmanager.MainPageActivity.class));
+                        overridePendingTransition(0, 0);
+                        finish();
+                        return true;
+                    case R.id.cameraNav:
+                        startActivity(new Intent(getApplicationContext(), MedicRegisterActivity.class));
+                        overridePendingTransition(0, 0);
+                        finish();
+                        return true;
+                    //article 버튼을 누르면 액티비티 화면을 전환시켜준다
+                    case R.id.articleNav:
+                        startActivity(new Intent(getApplicationContext(), MedicineListActivity.class));
                         overridePendingTransition(0, 0);
                         finish();
                         return true;
