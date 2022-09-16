@@ -35,7 +35,7 @@ activity_userregister.xml
                 android:layout_height="wrap_content"
                 android:id="@+id/idCheck"
                 android:text="중복확인"
-                android:layout_marginLeft="280dp"/>
+                android:layout_marginStart="280dp"/>
 
             <EditText
                 android:id="@+id/E_ID"
@@ -152,7 +152,7 @@ activity_userregister.xml
                 android:layout_width="400dp"
                 android:layout_height="2dp"
                 android:layout_marginTop="60dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:background="#808080" />
 
             <TextView

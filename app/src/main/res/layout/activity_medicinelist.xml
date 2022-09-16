@@ -9,6 +9,11 @@ activity_medicinelist.xml
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
         <ListView
             android:id="@+id/medicationlist"
             android:layout_width="300dp"
@@ -16,48 +21,53 @@ activity_medicinelist.xml
             android:layout_marginLeft="55dp"
             android:background="@drawable/green_border" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/forbtn"
-        android:text="병용 금기 확인하기"
-        android:padding="3dp"
-        android:layout_marginLeft="55dp"
-        android:layout_marginTop="420dp"
-        android:textSize="17dp"
-        android:background="@drawable/green_border" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/overbtn"
-        android:text="효능 중복 확인하기"
-        android:padding="3dp"
-        android:layout_marginLeft="215dp"
-        android:layout_marginTop="420dp"
-        android:textSize="17dp"
-        android:background="@drawable/green_border" />
+    </LinearLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnalldelete"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="56dp"
-        android:layout_marginTop="490dp"
-        android:background="#FF0000"
-        android:text="약 전부 삭제"
-        android:textColor="@color/black"
-        android:textSize="20dp" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/forbtn"
+            android:text="병용 금기 확인하기"
+            android:padding="3dp"
+            android:layout_marginLeft="55dp"
+            android:layout_marginTop="420dp"
+            android:textSize="17dp"
+            android:background="@drawable/green_border" />
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/overbtn"
+            android:text="효능 중복 확인하기"
+            android:padding="3dp"
+            android:layout_marginLeft="215dp"
+            android:layout_marginTop="420dp"
+            android:textSize="17dp"
+            android:background="@drawable/green_border" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnalldelete"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="56dp"
+            android:layout_marginTop="490dp"
+            android:background="#FF0000"
+            android:text="약 전부 삭제"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@color/white"
-        app:itemIconSize="30dp"
-        app:itemIconTint="@drawable/navcolor"
-        app:labelVisibilityMode="unlabeled"
-        app:menu="@menu/nav" />
+            android:id="@+id/bottomNav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@color/white"
+            app:itemIconSize="30dp"
+            app:itemIconTint="@drawable/navcolor"
+            app:labelVisibilityMode="unlabeled"
+            app:menu="@menu/nav" />
 
 </RelativeLayout>
