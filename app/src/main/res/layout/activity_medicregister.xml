@@ -60,18 +60,30 @@ activity_medicregister.xml
         android:textSize="19dp" />
 
     <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="300dp"
-                android:layout_height="50dp"
-                android:id="@+id/btnPicture"
-                android:text="촬영하기"
-                android:textSize="20dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginTop="475dp"
-                android:textColor="#036635"
-                android:layout_gravity="center"
-                android:background="@drawable/green_border"
-                android:enabled="false"
-                />
+        android:id="@+id/btnPicture"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="475dp"
+        android:background="@drawable/green_border"
+        android:enabled="false"
+        android:text="촬영하기"
+        android:textColor="#036635"
+        android:textSize="20dp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnRegister"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="555dp"
+        android:background="@drawable/green_border"
+        android:enabled="false"
+        android:text="등록하기"
+        android:textColor="#036635"
+        android:textSize="20dp" />
 
 
         <!--

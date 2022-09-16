@@ -135,7 +135,7 @@ public class MedicRegisterActivity extends AppCompatActivity {
         //btnStartCamera=(Button)findViewById(R.id.btnCameraStart);
         btnCamera=(Button) findViewById(R.id.btnPicture);
         //btnOCR=(Button)findViewById(R.id.btnOCR);
-        //btnRegister=(Button)findViewById(R.id.regimedicbtn);
+        btnRegister=(Button)findViewById(R.id.btnRegister);
         OCRTextView=(TextView) findViewById(R.id.OCRTextResult);
         //pictureImage=(ImageView)findViewById(R.id.CameraPicture);
 
@@ -166,6 +166,17 @@ public class MedicRegisterActivity extends AppCompatActivity {
         catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        previewView.setVisibility(View.VISIBLE);
+        OCRTextView.setVisibility(View.INVISIBLE);
+        //btnStartCamera.setVisibility(View.INVISIBLE);
+        //btnStartCamera.setEnabled(false);
+        btnCamera.setVisibility(View.VISIBLE);
+        btnCamera.setEnabled(true);
+
+        bindPreview();
+        bindImageCapture();
+
 
 
         //카메라 프리뷰 작동
@@ -255,6 +266,15 @@ public class MedicRegisterActivity extends AppCompatActivity {
                                                 OCRresult=mTess.getUTF8Text();
 
                                                 OCRTextView.setText(OCRresult);
+
+                                                //String array에 줄 단위로 저장 -> 이걸로 약 데이터 생성하면 됨
+                                                EdiCodearray=OCRresult.split("\n");
+
+                                                //api를 통해 받아온 약 목록을 저장
+                                                medicList=new String[EdiCodearray.length];
+
+                                                OCRTextView.setVisibility(View.VISIBLE);
+                                                previewView.setVisibility(View.INVISIBLE);
                                             }
                                         })
                                         //재촬영을 선택할 경우 bitmap에 저장된 비트맵 파일을 지우고 다시 카메라 프리뷰를 바인딩함
@@ -314,7 +334,7 @@ public class MedicRegisterActivity extends AppCompatActivity {
         });
         */
 
-        /*btnRegister.setOnClickListener(new View.OnClickListener() {
+        btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -324,7 +344,7 @@ public class MedicRegisterActivity extends AppCompatActivity {
                 Cursor cursor = sqlDB.rawQuery("SELECT * FROM medicTBL;", null);
 
                 switch(view.getId()){
-                    case R.id.regimedicbtn:
+                    case R.id.btnRegister:
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -337,7 +357,7 @@ public class MedicRegisterActivity extends AppCompatActivity {
                                     @Override
                                     public void run() {
                                         /* 읽어들인 약품을 의약품 DB에 저장 */
-                                        /*int count = cursor.getCount() + 1;
+                                        int count = cursor.getCount() + 1;
                                         for (int i = 0; i < medicList.length; i++) {
                                             sqlDB.execSQL("INSERT INTO medicTBL VALUES ("
                                                     + count + i + ", '"
@@ -360,7 +380,7 @@ public class MedicRegisterActivity extends AppCompatActivity {
                         break;
                 }
             }
-        }); */
+        });
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNav);
         bottomNavigationView.setSelectedItemId(R.id.cameraNav);
