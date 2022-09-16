@@ -16,6 +16,10 @@ activity_main.xml
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,7 +41,7 @@ activity_main.xml
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginLeft="45dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="80dp"
                 app:adSize="BANNER"
                 app:adUnitId="ca-app-pub-3940256099942544/6300978111" />
@@ -92,6 +96,7 @@ activity_main.xml
 
             </FrameLayout>
         </FrameLayout>
+        </LinearLayout>
     </ScrollView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
