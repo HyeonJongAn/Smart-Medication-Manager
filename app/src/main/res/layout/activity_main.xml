@@ -16,6 +16,10 @@ activity_main.xml
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,7 +41,7 @@ activity_main.xml
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginLeft="45dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="80dp"
                 app:adSize="BANNER"
                 app:adUnitId="ca-app-pub-3940256099942544/6300978111" />
@@ -47,7 +51,8 @@ activity_main.xml
                 android:id="@+id/pillbtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="120dp"
                 android:layout_marginTop="190dp"
                 android:background="#00ffffff"
                 android:drawableTop="@drawable/pill_size"
@@ -58,7 +63,7 @@ activity_main.xml
                 android:id="@+id/jarbtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="160dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="190dp"
                 android:background="#00ffffff"
                 android:drawableTop="@drawable/jar_size"
@@ -69,7 +74,8 @@ activity_main.xml
                 android:id="@+id/stickbtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="280dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="120dp"
                 android:layout_marginTop="190dp"
                 android:background="#00ffffff"
                 android:drawableTop="@drawable/stick_size"
@@ -77,21 +83,22 @@ activity_main.xml
                 android:text="스틱형" />
 
             <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                 <ListView
+                    android:layout_gravity="center_horizontal"
                     android:id="@+id/productlist"
                     android:layout_width="350dp"
                     android:layout_height="280dp"
-                    android:layout_marginLeft="30dp"
                     android:layout_marginTop="300dp"
                     android:layout_marginBottom="80dp"
-                    android:padding="10dp"
-                    android:background="@drawable/green_border" />
+                    android:background="@drawable/green_border"
+                    android:padding="10dp" />
 
             </FrameLayout>
         </FrameLayout>
+        </LinearLayout>
     </ScrollView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
