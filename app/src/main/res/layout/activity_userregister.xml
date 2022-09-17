@@ -20,7 +20,7 @@ activity_userregister.xml
             android:layout_height="wrap_content"
             android:background="@drawable/roundbox"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="20dp">
+            android:layout_margin="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -37,7 +37,7 @@ activity_userregister.xml
                 android:id="@+id/idCheck"
                 android:gravity="center_horizontal"
                 android:text="중복확인"
-                android:layout_marginStart="260dp"/>
+                android:layout_marginStart="250dp"/>
 
             <EditText
                 android:id="@+id/E_ID"
@@ -92,7 +92,7 @@ activity_userregister.xml
             android:layout_height="wrap_content"
             android:background="@drawable/roundbox"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="20dp">
+            android:layout_margin="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -134,7 +134,7 @@ activity_userregister.xml
             android:layout_height="wrap_content"
             android:background="@drawable/roundbox"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="20dp">
+            android:layout_margin="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -150,7 +150,7 @@ activity_userregister.xml
                 android:layout_height="wrap_content"
                 android:id="@+id/BtnBirthChoose"
                 android:text="선택"
-                android:layout_marginStart="260dp" />
+                android:layout_marginStart="250dp" />
 
             <View
                 android:layout_width="400dp"
@@ -200,7 +200,7 @@ activity_userregister.xml
             android:layout_width="370dp"
             android:layout_height="wrap_content"
             android:id="@+id/BtnComplete"
-            android:layout_margin="20dp"
+            android:layout_margin="10dp"
             android:layout_gravity="center_horizontal"
             android:text="회원가입 하기"
             android:textSize="20dp"

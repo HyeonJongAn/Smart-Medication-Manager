@@ -70,7 +70,7 @@ activity_my_page.xml
             android:id="@+id/btnLogout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="300dp"
+            android:layout_marginStart="290dp"
             android:layout_marginTop="70dp"
             android:text="로그아웃"
             android:textColor="#808080"
