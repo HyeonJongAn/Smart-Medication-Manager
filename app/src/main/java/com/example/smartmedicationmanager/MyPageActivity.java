@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -26,7 +25,7 @@ public class MyPageActivity extends AppCompatActivity{
     TextView TvName;
     TextView TvBirth;
     TextView TvGender;
-    TextView BtnLogout;
+    Button BtnLogout;
     Button BtnDel;
 
     UserData userData;
@@ -49,14 +48,12 @@ public class MyPageActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_my_page);
-        getSupportActionBar().setDisplayShowTitleEnabled(false); // 기본 타이틀 사용 안함
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); // 커스텀 사용
-        getSupportActionBar().setCustomView(R.layout.mytitlebar_custom); // 커스텀 사용할 파일 위치
+        setTitle("Medication Helper");
 
         TvName = (TextView) findViewById(R.id.tvName);
         TvBirth = (TextView) findViewById(R.id.tvBirth);
         TvGender = (TextView) findViewById(R.id.tvGender);
-        BtnLogout = (TextView) findViewById(R.id.btnLogout);
+        BtnLogout = (Button) findViewById(R.id.btnLogout);
         BtnDel = (Button) findViewById(R.id.btnDel);
 
         userData = (UserData) getApplicationContext();
