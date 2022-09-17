@@ -13,7 +13,6 @@
         android:xlargeScreens="true" />
 
     <application
-        android:usesCleartextTraffic="true"
         android:name=".UserData"
         android:allowBackup="true"
         android:icon="@drawable/green_cross"
@@ -21,6 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartMedicationManager">
+
         <activity
             android:name=".MainActivity"
             android:exported="false"/>
@@ -36,6 +36,7 @@
         </activity>
         <activity android:name=".MedicCheckActivity" />
         <activity android:name=".MedicineListActivity" />
+        <activity android:name=".MedicRegisterActivity" />
         <activity android:name=".ComForbiddenListActivity" />
         <activity android:name=".DuplicateListActivity" />
         <activity android:name=".PregnantForbiddenListActivity" />
@@ -43,6 +44,7 @@
         <activity android:name=".MyPageActivity" />
         <activity android:name=".UserRegisterActivity" />
         <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-2721080471277714~3179912396"/>
+        <meta-data android:name="android.max_aspect" android:value="2.1" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
