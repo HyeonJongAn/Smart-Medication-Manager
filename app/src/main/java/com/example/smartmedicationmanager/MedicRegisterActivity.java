@@ -1,14 +1,6 @@
-/****************************
- MedicRegisterActivity.java
- 작성 팀 : Hello World!
- 주 작성자 : 백인혁
- 프로그램명 : Medication Helper
- ***************************/
 package com.example.smartmedicationmanager;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -17,16 +9,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Camera;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -35,16 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.AspectRatio;
-import androidx.camera.core.CameraSelector;
-import androidx.camera.core.ImageCapture;
-import androidx.camera.core.ImageProxy;
-import androidx.camera.core.Preview;
-import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -66,29 +46,18 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.ExecutionException;
 
-public class MedicRegisterActivity extends AppCompatActivity {
+public class  MedicRegisterActivity extends AppCompatActivity {
 
     Bitmap image;//사용되는 이미지
-    Bitmap bitmap;
-    Bitmap rotatedBitmap;
-
     private TessBaseAPI mTess;//Tess API Reference
     String datapath="";//언어데이터가 있는 경로
 
-    PreviewView previewView;//프리뷰
-    Button btnStartCamera;//앱 내부에서 카메라 시작하기 버튼
-
     Button btnCamera;//카메라버튼
-    //ImageView pictureImage;//사진 표시하는 이미지뷰
+    ImageView pictureImage;//사진 표시하는 이미지뷰
 
-    //Button btnOCR;//OCR버튼
+    Button btnOCR;//OCR버튼
     TextView OCRTextView;//OCR한 EDI 코드 목록을 표시하는 TextView
-
-    ProcessCameraProvider processCameraProvider;
-    int lensFacing= CameraSelector.LENS_FACING_BACK;
-    ImageCapture imageCapture;
 
     Uri photoUri;
     String OCRresult;
@@ -107,14 +76,14 @@ public class MedicRegisterActivity extends AppCompatActivity {
 
     /* 의약품 DB를 사용하기 위한 변수들 */
     UserData userData;
-    com.example.smartmedicationmanager.MedicDBHelper myHelper;
+    MedicDBHelper myHelper;
     SQLiteDatabase sqlDB;
 
     /*스마트폰의 뒤로가기 버튼에 대한 뒤로가기 동작 구현*/
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent BackToMain = new Intent(MedicRegisterActivity.this, com.example.smartmedicationmanager.MainPageActivity.class);
+        Intent BackToMain = new Intent(MedicRegisterActivity.this, MainPageActivity.class);
         BackToMain.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(BackToMain);
         finish();
@@ -125,20 +94,15 @@ public class MedicRegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_medicregister);
-        getSupportActionBar().setDisplayShowTitleEnabled(false); // 기본 타이틀 사용 안함
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); // 커스텀 사용
-        getSupportActionBar().setCustomView(R.layout.mediregititlebar_custom); // 커스텀 사용할 파일 위치
+        setTitle("Medication Helper");
 
         userData = (UserData)getApplicationContext();
-        myHelper = new com.example.smartmedicationmanager.MedicDBHelper(this);
-        previewView=(PreviewView)findViewById(R.id.previewView);
-        //btnStartCamera=(Button)findViewById(R.id.btnCameraStart);
+        myHelper = new MedicDBHelper(this);
         btnCamera=(Button) findViewById(R.id.btnPicture);
-        //btnOCR=(Button)findViewById(R.id.btnOCR);
-        btnRegister=(Button)findViewById(R.id.btnRegister);
+        btnOCR=(Button)findViewById(R.id.btnOCR);
+        btnRegister=(Button)findViewById(R.id.regimedicbtn);
         OCRTextView=(TextView) findViewById(R.id.OCRTextResult);
-        //pictureImage=(ImageView)findViewById(R.id.CameraPicture);
-
+        pictureImage=(ImageView)findViewById(R.id.CameraPicture);
 
         //언어 파일 경로 설정
         datapath=getFilesDir()+"/tessaract/";
@@ -155,50 +119,7 @@ public class MedicRegisterActivity extends AppCompatActivity {
         mTess.setVariable(TessBaseAPI.VAR_CHAR_BLACKLIST, ".,!?@#$%&*()<>_-+=/:;'\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
         mTess.setVariable(TessBaseAPI.VAR_CHAR_WHITELIST, "0123456789");
 
-        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CAMERA},1);
 
-        try{
-            processCameraProvider=processCameraProvider.getInstance(this).get();
-        }
-        catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        previewView.setVisibility(View.VISIBLE);
-        OCRTextView.setVisibility(View.INVISIBLE);
-        //btnStartCamera.setVisibility(View.INVISIBLE);
-        //btnStartCamera.setEnabled(false);
-        btnCamera.setVisibility(View.VISIBLE);
-        btnCamera.setEnabled(true);
-
-        bindPreview();
-        bindImageCapture();
-
-
-
-        //카메라 프리뷰 작동
-        /* btnStartCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(ActivityCompat.checkSelfPermission(MedicRegisterActivity.this,Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED){
-                    previewView.setVisibility(View.VISIBLE);
-                    OCRTextView.setVisibility(View.INVISIBLE);
-                    btnStartCamera.setVisibility(View.INVISIBLE);
-                    btnStartCamera.setEnabled(false);
-                    btnCamera.setVisibility(View.VISIBLE);
-                    btnCamera.setEnabled(true);
-
-                    bindPreview();
-                    bindImageCapture();
-
-                }
-            }
-        }); */
-
-        /*
         //카메라에 접근해 사진 찍는 버튼
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -208,131 +129,36 @@ public class MedicRegisterActivity extends AppCompatActivity {
                 OCRTextView.setVisibility(View.INVISIBLE);
             }
         });
-        */
-
-        btnCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                imageCapture.takePicture(ContextCompat.getMainExecutor(MedicRegisterActivity.this),
-                        new ImageCapture.OnImageCapturedCallback() {
-                            @Override
-                            public void onCaptureSuccess(@NonNull ImageProxy image) {
-                                @SuppressLint("UnsafeExperimentalUsageError")
-                                Image mediaImage = image.getImage();
-                                bitmap = ImageUtil.mediaImageToBitmap(mediaImage);
 
 
-                                Log.d("MainActivity", Integer.toString(bitmap.getWidth())); //4128
-                                Log.d("MainActivity", Integer.toString(bitmap.getHeight())); //3096
-
-                                //imageView.setImageBitmap(bitmap);
-                                rotatedBitmap = ImageUtil.rotateBitmap(bitmap, image.getImageInfo().getRotationDegrees());
-
-                                Log.d("MainActivity", Integer.toString(rotatedBitmap.getWidth())); //3096
-                                Log.d("MainActivity", Integer.toString(rotatedBitmap.getHeight())); //4128
-                                Log.d("MainAtivity", Integer.toString(image.getImageInfo().getRotationDegrees()));
-                                //90 //0, 90, 180, 90 //이미지를 바르게 하기위해 시계 방향으로 회전해야할 각도
-
-                                processCameraProvider.unbindAll();//카메라 프리뷰 중단
-                                //pictureImage.setImageBitmap(rotatedBitmap);
-                                previewView.setVisibility(View.INVISIBLE);
-                                //pictureImage.setVisibility(View.VISIBLE);
-
-                                super.onCaptureSuccess(image);
-
-                                int height=rotatedBitmap.getHeight();
-                                int width=rotatedBitmap.getWidth();
-
-                                //AlertDialog에 사용할 비트맵 이미지의 사이즈를 가로세로 비율 맞춰 축
-                                Bitmap popupBitmap=Bitmap.createScaledBitmap(rotatedBitmap,1000,height/(width/1000),true);
-
-                                //카메라 바인딩 사용중단
-                                processCameraProvider.unbindAll();
-
-                                ImageView capturedimage = new ImageView(MedicRegisterActivity.this);
-                                capturedimage.setImageBitmap(popupBitmap);
-
-                                //사진 촬영 결과를 AlertDialog로 띄워 사용 여부를 선택한다
-                                AlertDialog.Builder captureComplete=new AlertDialog.Builder(MedicRegisterActivity.this)
-                                        .setTitle("촬영 결과")
-                                        .setMessage("이 사진을 사용할까요?")
-                                        .setView(capturedimage)
-                                        //사용을 선택할 경우 OCR 실행
-                                        .setPositiveButton("사용", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                String OCRresult=null;
-                                                mTess.setImage(rotatedBitmap);
-                                                OCRresult=mTess.getUTF8Text();
-
-                                                OCRTextView.setText(OCRresult);
-
-                                                //String array에 줄 단위로 저장 -> 이걸로 약 데이터 생성하면 됨
-                                                EdiCodearray=OCRresult.split("\n");
-
-                                                //api를 통해 받아온 약 목록을 저장
-                                                medicList=new String[EdiCodearray.length];
-
-                                                OCRTextView.setVisibility(View.VISIBLE);
-                                                previewView.setVisibility(View.INVISIBLE);
-                                            }
-                                        })
-                                        //재촬영을 선택할 경우 bitmap에 저장된 비트맵 파일을 지우고 다시 카메라 프리뷰를 바인딩함
-                                        .setNegativeButton("재촬영", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                bitmap=null;
-                                                bindPreview();
-                                                bindImageCapture();
-                                                OCRTextView.setVisibility(View.INVISIBLE);
-                                                //pictureImage.setVisibility(View.INVISIBLE);
-                                                previewView.setVisibility(View.VISIBLE);
-                                            }
-                                        });
-
-                                captureComplete.setCancelable(false);
-
-                                captureComplete.create().show();
-                            }
-                        });
-            }
-        });
-
-
-        /*
         //OCR로 EDI_Code 추출하는 버튼
         btnOCR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 BitmapDrawable d=(BitmapDrawable) ((ImageView)findViewById(R.id.CameraPicture)).getDrawable();
                 image=d.getBitmap();
+
                 OCRresult=null;
                 mTess.setImage(image);
+
                 OCRresult=mTess.getUTF8Text();
+
                 OCRTextView.setText(OCRresult);
+
                 //String array에 줄 단위로 저장 -> 이걸로 약 데이터 생성하면 됨
                 EdiCodearray=OCRresult.split("\n");
+
                 //api를 통해 받아온 약 목록을 저장
                 medicList=new String[EdiCodearray.length];
+
                 OCRTextView.setVisibility(View.VISIBLE);
                 pictureImage.setVisibility(View.INVISIBLE);
-                Toast.makeText(getApplicationContext(), "화면의 코드와 처방전의 코드가 일치하는지 확인해주세요", Toast.LENGTH_LONG).show();
-            }
-        });
-        */
 
-        /*
-        //OCR로 EDI_Code 추출하는 버튼
-        btnOCR.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                OCRresult=null;
-                mTess.setImage(rotatedBitmap);
-                OCRresult=mTess.getUTF8Text();
-                OCRTextView.setText(OCRresult);
+                Toast.makeText(getApplicationContext(), "화면의 코드와 처방전의 코드가 일치하는지 확인해주세요", Toast.LENGTH_LONG).show();
+
             }
         });
-        */
+
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -344,7 +170,7 @@ public class MedicRegisterActivity extends AppCompatActivity {
                 Cursor cursor = sqlDB.rawQuery("SELECT * FROM medicTBL;", null);
 
                 switch(view.getId()){
-                    case R.id.btnRegister:
+                    case R.id.regimedicbtn:
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -365,7 +191,7 @@ public class MedicRegisterActivity extends AppCompatActivity {
                                                     + medicList[i] + "');");
                                         }
 
-                                        Intent BackToMain = new Intent(MedicRegisterActivity.this, com.example.smartmedicationmanager.MainPageActivity.class); // 메인화면으로 돌아가는 기능
+                                        Intent BackToMain = new Intent(MedicRegisterActivity.this, MainPageActivity.class); // 메인화면으로 돌아가는 기능
                                         BackToMain.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // 백그라운드에서 실행되지 않도록 플래그 삭제
                                         startActivity(BackToMain); // 실행
 
@@ -381,6 +207,16 @@ public class MedicRegisterActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //메인화면으로 복귀
+       /*btnBacktoMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MedicRegisterActivity.this, MainPageActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });*/
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNav);
         bottomNavigationView.setSelectedItemId(R.id.cameraNav);
@@ -414,28 +250,6 @@ public class MedicRegisterActivity extends AppCompatActivity {
                 return false;
             }
         });
-    }
-
-    void bindPreview(){
-        previewView.setScaleType(PreviewView.ScaleType.FIT_CENTER);
-        CameraSelector cameraSelector = new CameraSelector.Builder()
-                .requireLensFacing(lensFacing)
-                .build();
-        Preview preview = new Preview.Builder()
-                .setTargetAspectRatio(AspectRatio.RATIO_4_3)
-                .build();
-        preview.setSurfaceProvider(previewView.getSurfaceProvider());
-        processCameraProvider.bindToLifecycle(this,cameraSelector,preview);
-    }
-
-    void bindImageCapture(){
-        CameraSelector cameraSelector=new CameraSelector.Builder()
-                .requireLensFacing(lensFacing)
-                .build();
-        imageCapture=new ImageCapture.Builder()
-                .build();
-
-        processCameraProvider.bindToLifecycle(this,cameraSelector,imageCapture);
     }
 
     //Xml에서 데이터 가져오기
@@ -487,7 +301,6 @@ public class MedicRegisterActivity extends AppCompatActivity {
         return buffer.toString();
     }
 
-    /*
     //상수를 받아 각도를 변환
     private int exifOrientationToDegrees(int exifOrientation) {
         if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
@@ -499,12 +312,14 @@ public class MedicRegisterActivity extends AppCompatActivity {
         }
         return 0;
     }
+
     //비트맵을 각도대로 회전시켜 결과를 반환
     private Bitmap rotate(Bitmap bitmap, float degree) {
         Matrix matrix = new Matrix();
         matrix.postRotate(degree);
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
+
     //카메라로 사진 찍어 이미지 띄우기
     private void sendTakePhotoIntent(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -515,13 +330,16 @@ public class MedicRegisterActivity extends AppCompatActivity {
             } catch (IOException ex) {
                 // Error occurred while creating the File
             }
+
             if (photoFile != null) {
                 photoUri = FileProvider.getUriForFile(this, getPackageName()+".fileprovider", photoFile);
+
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
     }
+
     //intent로 비트맵 이미지 자체를 불러와서 이미지뷰에 출력
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -529,14 +347,17 @@ public class MedicRegisterActivity extends AppCompatActivity {
         if(requestCode==REQUEST_IMAGE_CAPTURE&&resultCode==RESULT_OK){
             ((ImageView)findViewById(R.id.CameraPicture)).setImageURI(photoUri);
             ExifInterface exif=null;
+
             Bitmap bitmap= BitmapFactory.decodeFile(imageFilePath);
             try{
                 exif = new ExifInterface(imageFilePath);
             }catch(IOException e){
                 e.printStackTrace();
             }
+
             int exifOrientation;
             int exifDegree;
+
             if(exif!=null){
                 exifOrientation=exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,ExifInterface.ORIENTATION_NORMAL);
                 exifDegree=exifOrientationToDegrees(exifOrientation);
@@ -546,6 +367,7 @@ public class MedicRegisterActivity extends AppCompatActivity {
             pictureImage.setImageBitmap(rotate(bitmap,exifDegree));
         }
     }
+
     //이미지파일 생성
     private File createImageFile() throws IOException{
         String timeStamp=new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -560,7 +382,6 @@ public class MedicRegisterActivity extends AppCompatActivity {
         imageFilePath=image.getAbsolutePath();
         return image;
     }
-     */
 
     //스마트폰에 사진 파일 복사
     private void copyFiles(String lang){
@@ -601,5 +422,4 @@ public class MedicRegisterActivity extends AppCompatActivity {
             }
         }
     }
-
 }
