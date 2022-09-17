@@ -16,6 +16,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -38,6 +39,7 @@ public class UserRegisterActivity extends AppCompatActivity{
     RadioGroup RG;
     RadioButton RB_Man, RB_Woman;
     Button btnIDCheck, btnBirthChoose, btnComplete;
+    TextView tvBirth;
     int dateCheckCounter = 0;
     int genderCheckCounter = 0;
 
@@ -71,6 +73,7 @@ public class UserRegisterActivity extends AppCompatActivity{
         btnIDCheck = (Button) findViewById(R.id.idCheck);
         btnBirthChoose = (Button) findViewById(R.id.BtnBirthChoose);
         btnComplete = (Button) findViewById(R.id.BtnComplete);
+        tvBirth = (TextView) findViewById(R.id.TvBirth);
 
         /* 오늘 날짜 계산 */
         Date todayDate = Calendar.getInstance().getTime();
@@ -110,7 +113,7 @@ public class UserRegisterActivity extends AppCompatActivity{
                     dateCheckCounter = 0; // 카운터 초기화
                 }
                 else // 정상적으로 생년월일을 입력받은 경우
-                    btnBirthChoose.setText(dayOfMonth +"/" + (month + 1) + "/" + year); // 생년월일 선택 버튼에 생년월일을 표시함
+                    tvBirth.setText(dayOfMonth +"/" + (month + 1) + "/" + year); // 생년월일 선택 버튼에 생년월일을 표시함
             }
         }, mYear, mMonth, mDay);
 
@@ -164,22 +167,21 @@ public class UserRegisterActivity extends AppCompatActivity{
         btnComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent completeIntent = new Intent(UserRegisterActivity.this, com.example.smartmedicationmanager.MainActivity.class); // 메인화면으로 돌아가기 위한 기능
                 String ID = E_ID.getText().toString();
                 String password = E_Pass.getText().toString();
                 String passwordCheck = E_PassCheck.getText().toString();
                 String name = E_Name.getText().toString();
-                String birth = btnBirthChoose.getText().toString();
+                String birth = tvBirth.getText().toString();
 
                 switch (RG.getCheckedRadioButtonId()) {
                     case R.id.RB_man:
-                        genderCheckCounter = 0;
+                        genderCheckCounter = 1;
                         break;
                     case R.id.RB_woman:
-                        genderCheckCounter = 0;
+                        genderCheckCounter = 2;
                         break;
                     default:
-                        genderCheckCounter = 1;
+                        genderCheckCounter = 0;
                         break;
                 }
 
@@ -187,16 +189,12 @@ public class UserRegisterActivity extends AppCompatActivity{
                     Toast.makeText(getApplicationContext(), "ID가 입력되지 않았습니다.", Toast.LENGTH_SHORT).show();
                 } else if (password.length() == 0) { // 비밀번호란이 공백인 경우
                     Toast.makeText(getApplicationContext(), "비밀번호가 입력되지 않았습니다.", Toast.LENGTH_SHORT).show();
-                } else if (passwordCheck.length() == 0) {
+                } else if (passwordCheck.length() == 0) { // 비밀번호 확인란이 공백인 경우
                     Toast.makeText(getApplicationContext(), "비밀번호를 다시 한 번 입력해 주십시오.", Toast.LENGTH_SHORT).show();
-                } else if (password.equals(passwordCheck) == false) {
+                } else if (password.equals(passwordCheck) == false) { // 비밀번호랑 확인이 다를 경우
                     Toast.makeText(getApplicationContext(), "비밀번호 확인란에 입력된 내용이 비밀번호와 다릅니다.", Toast.LENGTH_SHORT).show();
                 } else if (name.length() == 0) { // 이름란이 공백인 경우
                     Toast.makeText(getApplicationContext(), "사용자 이름이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show();
-                } else if (birth.equals("선택")) { // 생년월일이 선택되지 않았을 경우
-                    Toast.makeText(getApplicationContext(), "생년월일이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show();
-                } else if (genderCheckCounter == 1) {
-                    Toast.makeText(getApplicationContext(), "성별이 선택되지 않았습니다.", Toast.LENGTH_SHORT).show();
                 } else {
                     Response.Listener<String> responseListener = new Response.Listener<String>() {
                         @Override
@@ -220,13 +218,18 @@ public class UserRegisterActivity extends AppCompatActivity{
                         }
                     };
 
-                    switch (RG.getCheckedRadioButtonId()) {
-                        case R.id.RB_man:
+                    switch (genderCheckCounter) {
+                        case 0:
+                            UserRegisterRequest RegisterRequest = new UserRegisterRequest(ID, password, name, birth, "", responseListener);
+                            RequestQueue Queue = Volley.newRequestQueue(UserRegisterActivity.this);
+                            Queue.add(RegisterRequest);
+                            break;
+                        case 1:
                             UserRegisterRequest manRegisterRequest = new UserRegisterRequest(ID, password, name, birth, "man", responseListener);
                             RequestQueue manQueue = Volley.newRequestQueue(UserRegisterActivity.this);
                             manQueue.add(manRegisterRequest);
                             break;
-                        case R.id.RB_woman:
+                        case 2:
                             UserRegisterRequest womanRegisterRequest = new UserRegisterRequest(ID, password, name, birth, "woman", responseListener);
                             RequestQueue womanQueue = Volley.newRequestQueue(UserRegisterActivity.this);
                             womanQueue.add(womanRegisterRequest);
