@@ -145,12 +145,22 @@ activity_userregister.xml
                 android:textSize="20dp"
                 android:textColor="#036635"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/TvBirth"
+                android:text = ""
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="100dp"
+                android:textSize="20dp"
+                android:textColor="#036635"/>
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/BtnBirthChoose"
                 android:text="선택"
-                android:layout_marginStart="240dp" />
+                android:layout_marginStart="280dp" />
 
             <View
                 android:layout_width="400dp"

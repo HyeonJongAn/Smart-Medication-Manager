@@ -13,6 +13,7 @@
         android:xlargeScreens="true" />
 
     <application
+        android:usesCleartextTraffic="true"
         android:name=".UserData"
         android:allowBackup="true"
         android:icon="@drawable/green_cross"
