@@ -110,10 +110,10 @@ public class MainActivity extends FragmentActivity {
                                 userData.setUserPassWord(loginPassword);
                                 userData.setUserNickName(loginName);
                                 userData.setUserBirth(loginBirth);
-                                userData.setUserGender(loginGender);
+                                userData.setUserGender(loginGender); */
 
                                 Intent intent = new Intent(MainActivity.this, MainPageActivity.class);
-                                startActivity(intent);*/
+                                startActivity(intent);
                             } else {
                                 Toast.makeText(getApplicationContext(), "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
                                 return;
