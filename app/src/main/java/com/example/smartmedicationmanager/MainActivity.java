@@ -24,6 +24,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -31,9 +34,9 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
+import org.json.JSONObject;
+
 public class MainActivity extends FragmentActivity {
-    UserDBHelper myHelper;
-    SQLiteDatabase sqlDB;
     UserData userData;
 
     //뒤로가기 누르면 앱종료시키는 함수
@@ -73,7 +76,7 @@ public class MainActivity extends FragmentActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_login);
 
-        userData = (UserData)getApplicationContext();
+        userData = (UserData) getApplicationContext();
         EditText edtID = findViewById(R.id.editID);
         EditText edtPW = findViewById(R.id.editPW);
 
@@ -81,7 +84,6 @@ public class MainActivity extends FragmentActivity {
         Button btnlogin = findViewById(R.id.btnlogin);
         TextView btnsignin = findViewById(R.id.btnsignin);
 
-        myHelper = new UserDBHelper(this);
         btnlogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,8 +97,6 @@ public class MainActivity extends FragmentActivity {
                             boolean success = jsonResponse.getBoolean("success");
                             if(success){
                                 Toast.makeText(getApplicationContext(), "로그인에 성공했습니다.", Toast.LENGTH_SHORT).show();
-
-                                System.out.println(jsonResponse.getString("userBirth"));
 
                                 /*String loginID = jsonResponse.getString("userID");
                                 String loginPassword = jsonResponse.getString("userPassword");
@@ -119,29 +119,16 @@ public class MainActivity extends FragmentActivity {
                         } catch(Exception e){
                             e.printStackTrace();
                         }
-                        break;
                     }
-                }
-
-                if (checkID == false) {
-                    Toast.makeText(getApplicationContext(), "등록된 ID가 없습니다.", Toast.LENGTH_SHORT).show();
-                }
-                else if (checkPW == false) {
-                    Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "로그인 완료", Toast.LENGTH_SHORT).show();
-
-                    Intent mainIntent = new Intent(MainActivity.this, com.example.smartmedicationmanager.MainPageActivity.class);
-                    startActivity(mainIntent);
-                    finish();
-                }
+                };
+                LoginRequest loginRequest = new LoginRequest(userID, userPassword, responseListener);
+                RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+                queue.add(loginRequest);
             }
         });
 
         // 자동 로그인 구현 부분분
        if (checkBox.isChecked()) {
-            SharedPreferences sharedPreferences = getSharedPreferences("sharedPreferences", Activity.MODE_PRIVATE);
         }
 
         btnsignin.setOnClickListener(new View.OnClickListener() {
