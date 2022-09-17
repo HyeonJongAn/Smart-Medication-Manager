@@ -37,7 +37,7 @@ activity_userregister.xml
                 android:id="@+id/idCheck"
                 android:gravity="center_horizontal"
                 android:text="중복확인"
-                android:layout_marginStart="250dp"/>
+                android:layout_marginStart="240dp"/>
 
             <EditText
                 android:id="@+id/E_ID"
@@ -150,7 +150,7 @@ activity_userregister.xml
                 android:layout_height="wrap_content"
                 android:id="@+id/BtnBirthChoose"
                 android:text="선택"
-                android:layout_marginStart="250dp" />
+                android:layout_marginStart="240dp" />
 
             <View
                 android:layout_width="400dp"

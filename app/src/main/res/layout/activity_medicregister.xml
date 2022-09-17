@@ -22,8 +22,7 @@ activity_medicregister.xml
 
         <androidx.camera.view.PreviewView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="400dp"
             android:layout_gravity="center_horizontal"
             android:visibility="invisible"
             android:id="@+id/previewView">
@@ -31,8 +30,7 @@ activity_medicregister.xml
             <TextView
                 android:id="@+id/OCRTextResult"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="400dp"
                 android:gravity="center"
                 android:text="이 곳에\n 사진과 목록이\n 표시됩니다"
                 android:textAlignment="center"
