@@ -11,13 +11,15 @@
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/activity_login.xml" value="0.264" />
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/activity_mediccheck.xml" value="0.264" />
-        <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/activity_medicinelist.xml" value="0.109375" />
+        <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/activity_medicinelist.xml" value="0.2" />
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/activity_medicregister.xml" value="0.264" />
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/activity_my_page.xml" value="0.109375" />
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/activity_pregnantforbiddenlist.xml" value="0.2" />
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/activity_splash.xml" value="0.109375" />
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/activity_userregister.xml" value="0.109375" />
-        <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/activity_web.xml" value="0.109375" />
+        <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/activity_web.xml" value="0.2" />
+        <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/productlist_custom.xml" value="0.24947916666666667" />
+        <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/titlebar_custom.xml" value="0.24947916666666667" />
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/menu/nav.xml" value="0.109375" />
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1205" />
       </map>

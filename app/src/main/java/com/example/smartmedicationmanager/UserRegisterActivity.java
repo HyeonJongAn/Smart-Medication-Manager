@@ -9,6 +9,8 @@ package com.example.smartmedicationmanager;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,27 +23,20 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 public class UserRegisterActivity extends AppCompatActivity{
-    EditText E_ID, E_Pass, E_PassCheck, E_Name;
+    com.example.smartmedicationmanager.UserDBHelper myHelper;
+    SQLiteDatabase sqlDB;
+    EditText E_ID, E_Pass, E_Name;
     RadioGroup RG;
     RadioButton RB_Man, RB_Woman;
-    Button btnIDCheck, btnBirthChoose, btnComplete;
+    Button btnBirthChoose, btnComplete;
     int dateCheckCounter = 0;
-    int genderCheckCounter = 0;
-
-    private boolean validate = false;
+    int dupCheckCounter = 0;
 
     @Override // 하단의 뒤로가기(◀) 버튼을 눌렀을 시 동작
     public void onBackPressed() {
@@ -63,14 +58,14 @@ public class UserRegisterActivity extends AppCompatActivity{
 
         E_ID = (EditText) findViewById(R.id.E_ID);
         E_Pass = (EditText) findViewById(R.id.E_Pass);
-        E_PassCheck = (EditText) findViewById(R.id.E_PassCheck);
         E_Name = (EditText) findViewById(R.id.E_name);
         RG = (RadioGroup) findViewById(R.id.RG);
         RB_Man = (RadioButton) findViewById(R.id.RB_man);
         RB_Woman = (RadioButton) findViewById(R.id.RB_woman);
-        btnIDCheck = (Button) findViewById(R.id.idCheck);
         btnBirthChoose = (Button) findViewById(R.id.BtnBirthChoose);
         btnComplete = (Button) findViewById(R.id.BtnComplete);
+
+        myHelper = new com.example.smartmedicationmanager.UserDBHelper(this);
 
         /* 오늘 날짜 계산 */
         Date todayDate = Calendar.getInstance().getTime();
@@ -114,44 +109,6 @@ public class UserRegisterActivity extends AppCompatActivity{
             }
         }, mYear, mMonth, mDay);
 
-        btnIDCheck.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String ID = E_ID.getText().toString();
-                if (validate)
-                    return;
-                if (ID.equals("")) {
-                    Toast.makeText(getApplicationContext(), "ID가 입력되지 않았습니다.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                Response.Listener<String> responseListener = new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");
-                            if (success) {
-                                Toast.makeText(getApplicationContext(), "사용할 수 있는 ID입니다.", Toast.LENGTH_SHORT).show();
-                                E_ID.setEnabled(false);
-                                validate = true;
-                                btnIDCheck.setText("확인");
-                            }
-                            else {
-                                Toast.makeText(getApplicationContext(), "사용할 수 없는 ID입니다.", Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                };
-
-                ValidateRequest validateRequest = new ValidateRequest(ID, responseListener);
-                RequestQueue queue = Volley.newRequestQueue(UserRegisterActivity.this);
-                queue.add(validateRequest);
-            }
-        });
-
         btnBirthChoose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -165,73 +122,57 @@ public class UserRegisterActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Intent completeIntent = new Intent(UserRegisterActivity.this, com.example.smartmedicationmanager.MainActivity.class); // 메인화면으로 돌아가기 위한 기능
-                String ID = E_ID.getText().toString();
-                String password = E_Pass.getText().toString();
-                String passwordCheck = E_PassCheck.getText().toString();
-                String name = E_Name.getText().toString();
-                String birth = btnBirthChoose.getText().toString();
-
-                switch (RG.getCheckedRadioButtonId()) {
-                    case R.id.RB_man:
-                        genderCheckCounter = 0;
-                        break;
-                    case R.id.RB_woman:
-                        genderCheckCounter = 0;
-                        break;
-                    default:
-                        genderCheckCounter = 1;
-                        break;
-                }
-
-                if (ID.length() == 0) { // ID란이 공백인 경우
-                    Toast.makeText(getApplicationContext(), "ID가 입력되지 않았습니다.", Toast.LENGTH_SHORT).show();
-                } else if (password.length() == 0) { // 비밀번호란이 공백인 경우
-                    Toast.makeText(getApplicationContext(), "비밀번호가 입력되지 않았습니다.", Toast.LENGTH_SHORT).show();
-                } else if (passwordCheck.length() == 0) {
-                    Toast.makeText(getApplicationContext(), "비밀번호를 다시 한 번 입력해 주십시오.", Toast.LENGTH_SHORT).show();
-                } else if (password.equals(passwordCheck) == false) {
-                    Toast.makeText(getApplicationContext(), "비밀번호 확인란에 입력된 내용이 비밀번호와 다릅니다.", Toast.LENGTH_SHORT).show();
-                } else if (name.length() == 0) { // 이름란이 공백인 경우
-                    Toast.makeText(getApplicationContext(), "사용자 이름이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show();
-                } else if (birth.equals("선택")) { // 생년월일이 선택되지 않았을 경우
-                    Toast.makeText(getApplicationContext(), "생년월일이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show();
-                } else if (genderCheckCounter == 1) {
-                    Toast.makeText(getApplicationContext(), "성별이 선택되지 않았습니다.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Response.Listener<String> responseListener = new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            try {
-                                System.out.println(ID);
-                                JSONObject jsonResponse = new JSONObject(response);
-                                boolean success = jsonResponse.getBoolean("success");
-                                if (success) {
-                                    Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                                    Intent finish = new Intent(UserRegisterActivity.this, MainActivity.class);
-                                    startActivity(finish);
-                                    finish();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "회원가입에 실패하였습니다.", Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                            } catch(Exception e) {
-                                e.printStackTrace();
-                            }
+                sqlDB = myHelper.getWritableDatabase(); // 사용자 정보 DB를 쓰기 가능으로 읽어옴
+                Cursor cursor = sqlDB.rawQuery("SELECT * FROM userTBL", null); // DB를 읽어옴
+                    while (cursor.moveToNext()) {
+                        if (cursor.getString(0).equals(E_ID.getText().toString())) {
+                            dupCheckCounter = 1; // 만약 회원가입할 ID가 DB상에 이미 존재할 경우
                         }
-                    };
-
+                    }
+                if (E_ID.getText().toString().length() == 0) { // ID란이 공백인 경우
+                    Toast.makeText(getApplicationContext(), "ID가 입력되지 않았습니다.", Toast.LENGTH_SHORT).show();
+                }
+                else if (dupCheckCounter == 1) { // ID가 중복될 경우
+                    Toast.makeText(getApplicationContext(), "이미 등록된 ID입니다.", Toast.LENGTH_SHORT).show();
+                    dupCheckCounter = 0;
+                }
+                else if (E_Pass.getText().toString().length() == 0) { // 비밀번호란이 공백인 경우
+                    Toast.makeText(getApplicationContext(), "비밀번호가 입력되지 않았습니다.", Toast.LENGTH_SHORT).show();
+                }
+                else if (E_Name.getText().toString().length() == 0) { // 이름란이 공백인 경우
+                    Toast.makeText(getApplicationContext(), "사용자 이름이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show();
+                }
+                else if (btnBirthChoose.getText().toString().equals("선택")) { // 생년월일이 선택되지 않았을 경우
+                    Toast.makeText(getApplicationContext(), "생년월일이 입력되지 않았습니다.", Toast.LENGTH_SHORT).show();
+                }
+                else { // 성별을 제외한 모든 정보가 입력되었을 경우
                     switch (RG.getCheckedRadioButtonId()) {
-                        case R.id.RB_man:
-                            UserRegisterRequest manRegisterRequest = new UserRegisterRequest(ID, password, name, birth, "man", responseListener);
-                            RequestQueue manQueue = Volley.newRequestQueue(UserRegisterActivity.this);
-                            manQueue.add(manRegisterRequest);
+                        case R.id.RB_man: // 성별을 남자로 선택했을 경우
+                            /* 입력받은 정보에 더해 성별을 MAN으로 지정해 DB에 저장 */
+                            sqlDB.execSQL("INSERT INTO userTBL VALUES ( '"
+                                    + E_ID.getText().toString() + "', '"
+                                    + E_Pass.getText().toString() + "', '"
+                                    + E_Name.getText().toString() + "', '"
+                                    + btnBirthChoose.getText().toString() + "', 'MAN');");
+                            Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                            sqlDB.close(); // DBHelper를 닫음
+                            finish(); // 회원가입 프로그래스 종료
+                            startActivity(completeIntent); // 메인화면으로 돌아감
+                            break; // switch문 탈출
+                        case R.id.RB_woman: // 성별을 여자로 선택했을 경우
+                            /* 입력받은 정보에 더해 성별을 WOMAN으로 지정해 DB에 저장 */
+                            sqlDB.execSQL("INSERT INTO userTBL VALUES ( '"
+                                    + E_ID.getText().toString() + "', '"
+                                    + E_Pass.getText().toString() + "', '"
+                                    + E_Name.getText().toString() + "' , '"
+                                    + btnBirthChoose.getText().toString() + "', 'WOMAN');");
+                            Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                            sqlDB.close();
+                            finish();
+                            startActivity(completeIntent);
                             break;
-                        case R.id.RB_woman:
-                            UserRegisterRequest womanRegisterRequest = new UserRegisterRequest(ID, password, name, birth, "woman", responseListener);
-                            RequestQueue womanQueue = Volley.newRequestQueue(UserRegisterActivity.this);
-                            womanQueue.add(womanRegisterRequest);
-                            break;
-                        default:
+                        default: // 성별이 선택되지 않았을 경우
+                            Toast.makeText(getApplicationContext(), "성별이 선택되지 않았습니다.", Toast.LENGTH_SHORT).show();
                             break;
                     }
                 }
