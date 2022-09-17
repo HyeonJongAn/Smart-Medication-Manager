@@ -13,47 +13,49 @@ activity_medicregister.xml
     android:orientation="vertical">
 
 
-        <FrameLayout
-            android:layout_width="300dp"
-            android:layout_height="400dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="50dp"
-            android:background="@drawable/green_border">
+    <FrameLayout
+        android:layout_width="300dp"
+        android:layout_height="400dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="50dp"
+        android:background="@drawable/green_border">
 
-            <androidx.camera.view.PreviewView
+        <androidx.camera.view.PreviewView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal"
+            android:visibility="invisible"
+            android:id="@+id/previewView">
+
+            <TextView
+                android:id="@+id/OCRTextResult"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:visibility="invisible"
-                android:id="@+id/previewView">
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="이 곳에\n 사진과 목록이\n 표시됩니다"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="40dp"
+                android:visibility="visible"></TextView>
+        </androidx.camera.view.PreviewView>
 
-                <TextView
-                    android:id="@+id/OCRTextResult"
-                    android:layout_width="match_parent"
-                    android:layout_height="400dp"
-                    android:gravity="center"
-                    android:text="이 곳에\n 사진과 목록이\n 표시됩니다"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    android:textSize="40dp"
-                    android:visibility="visible"></TextView>
-            </androidx.camera.view.PreviewView>
-
-            <!--
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:id="@+id/CameraPicture"
-                android:visibility="invisible">
-            </ImageView>
-            -->
-        </FrameLayout>
+        <!--
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:id="@+id/CameraPicture"
+            android:visibility="invisible">
+        </ImageView>
+        -->
+    </FrameLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="31dp"
+        android:layout_marginStart="7dp"
         android:layout_marginTop="435dp"
         android:gravity="center_horizontal"
         android:text="처방전을 찍으면 자동으로 약 성분이 등록됩니다."
