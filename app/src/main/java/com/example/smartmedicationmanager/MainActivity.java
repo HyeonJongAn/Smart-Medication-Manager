@@ -85,23 +85,42 @@ public class MainActivity extends FragmentActivity {
         btnlogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sqlDB = myHelper.getReadableDatabase();
-                Cursor cursor;
-                cursor = sqlDB.rawQuery("SELECT * FROM userTBL;", null);
-                Boolean checkID = false;
-                Boolean checkPW = false;
-                int position = 0;
+                String userID = edtID.getText().toString();
+                String userPassword = edtPW.getText().toString();
+                Response.Listener<String> responseListener = new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try{
+                            JSONObject jsonResponse = new JSONObject(response);
+                            boolean success = jsonResponse.getBoolean("success");
+                            if(success){
+                                Toast.makeText(getApplicationContext(), "로그인에 성공했습니다.", Toast.LENGTH_SHORT).show();
 
-                while (cursor.moveToNext()) {
-                    if ((cursor.getString(0)).equals(edtID.getText().toString())) {
-                        checkID = true;
-                        if ((cursor.getString(1)).equals(edtPW.getText().toString())){
-                            checkPW = true;
-                            break;
+                                System.out.println(jsonResponse.getString("userBirth"));
+
+                                /*String loginID = jsonResponse.getString("userID");
+                                String loginPassword = jsonResponse.getString("userPassword");
+                                String loginName = jsonResponse.getString("userName");
+                                String loginBirth = jsonResponse.getString("userBirth");
+                                String loginGender = jsonResponse.getString("userGender");
+
+                                userData.setUserID(loginID);
+                                userData.setUserPassWord(loginPassword);
+                                userData.setUserNickName(loginName);
+                                userData.setUserBirth(loginBirth);
+                                userData.setUserGender(loginGender); */
+
+                                Intent intent = new Intent(MainActivity.this, MainPageActivity.class);
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(getApplicationContext(), "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        } catch(Exception e){
+                            e.printStackTrace();
                         }
                         break;
                     }
-                    position++;
                 }
 
                 if (checkID == false) {
@@ -112,12 +131,7 @@ public class MainActivity extends FragmentActivity {
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "로그인 완료", Toast.LENGTH_SHORT).show();
-                    cursor.moveToPosition(position);
-                    userData.setUserID(cursor.getString(0));
-                    userData.setUserPassWord(cursor.getString(1));
-                    userData.setUserNickName(cursor.getString(2));
-                    userData.setUserBirth(cursor.getString(3));
-                    userData.setUserGender(cursor.getString(4));
+
                     Intent mainIntent = new Intent(MainActivity.this, com.example.smartmedicationmanager.MainPageActivity.class);
                     startActivity(mainIntent);
                     finish();
