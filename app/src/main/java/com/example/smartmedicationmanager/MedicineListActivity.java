@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -41,7 +40,7 @@ public class MedicineListActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent Back = new Intent(MedicineListActivity.this, MainPageActivity.class);
+        Intent Back = new Intent(MedicineListActivity.this, MedicCheckActivity.class);
         Back.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(Back);
         finish();
@@ -52,12 +51,7 @@ public class MedicineListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_medicinelist);
-        getSupportActionBar().setDisplayShowTitleEnabled(false); // 기본 타이틀 사용 안함
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); // 커스텀 사용
-        getSupportActionBar().setCustomView(R.layout.medilisttitlebar_custom); // 커스텀 사용할 파일 위치
-
-        Button forBtn = findViewById(R.id.forbtn);
-        Button overBtn = findViewById(R.id.overbtn);
+        setTitle("Medication Helper");
 
         userData = (UserData) getApplicationContext();
         myHelper = new com.example.smartmedicationmanager.MedicDBHelper(this);
@@ -67,6 +61,7 @@ public class MedicineListActivity extends AppCompatActivity {
 
         medicationListView=(ListView)findViewById(R.id.medicationlist);
         delBtn=(Button)findViewById(R.id.btnalldelete);
+        btnBack=(Button)findViewById(R.id.back);
 
         String[] medicineArray = new String[cursor.getCount()];//DB에서 받아온 처방약 목록을 저장하는 String 배열
         int serialNo = 0;
@@ -105,20 +100,13 @@ public class MedicineListActivity extends AppCompatActivity {
             }
         });
 
-        forBtn.setOnClickListener(new View.OnClickListener() {
+        // 뒤로 가기 버튼을 눌렀을 경우
+        btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), ComForbiddenListActivity.class));
-                overridePendingTransition(0, 0);
-                finish();
-            }
-        });
-        overBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), DuplicateListActivity.class));
-                overridePendingTransition(0, 0);
-                finish();
+                Intent intent = new Intent(MedicineListActivity.this, MedicCheckActivity.class); // 이전 화면으로 돌아가는 기능
+                startActivity(intent); // 실행
+                finish(); // Progress 완전 종료
             }
         });
 
