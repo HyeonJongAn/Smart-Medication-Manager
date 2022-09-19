@@ -3,9 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/drawable/example.xml" value="0.1495" />
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/drawable/green_border.xml" value="0.2065" />
+        <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/drawable/ic_baseline_article_24.xml" value="0.2135" />
+        <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/drawable/ic_baseline_home_24.xml" value="0.2135" />
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.1205" />
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/drawable/navcolor.xml" value="0.2065" />
+        <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/drawable/pexample.xml" value="0.1195" />
+        <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/drawable/stick_size.xml" value="0.1205" />
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/activity_comforbiddenlist.xml" value="0.22826086956521738" />
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/activity_duplicatelist.xml" value="0.109375" />
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/activity_login.xml" value="0.264" />
@@ -18,6 +23,7 @@
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/activity_splash.xml" value="0.109375" />
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/activity_userregister.xml" value="0.109375" />
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/activity_web.xml" value="0.2" />
+        <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/maplayout.xml" value="0.10833333333333334" />
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/productlist_custom.xml" value="0.24947916666666667" />
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/layout/titlebar_custom.xml" value="0.24947916666666667" />
         <entry key="..\:/University/GitHub/Smart-Medication-Manager/app/src/main/res/menu/nav.xml" value="0.109375" />

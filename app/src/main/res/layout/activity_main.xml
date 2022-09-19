@@ -47,51 +47,17 @@ activity_main.xml
                 app:adUnitId="ca-app-pub-3940256099942544/6300978111" />
 
 
-            <Button
-                android:id="@+id/pillbtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginEnd="120dp"
-                android:layout_marginTop="190dp"
-                android:background="#00ffffff"
-                android:drawableTop="@drawable/pill_size"
-                android:drawablePadding="10dp"
-                android:text="알약형" />
-
-            <Button
-                android:id="@+id/jarbtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="190dp"
-                android:background="#00ffffff"
-                android:drawableTop="@drawable/jar_size"
-                android:drawablePadding="10dp"
-                android:text="액상형" />
-
-            <Button
-                android:id="@+id/stickbtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginStart="120dp"
-                android:layout_marginTop="190dp"
-                android:background="#00ffffff"
-                android:drawableTop="@drawable/stick_size"
-                android:drawablePadding="10dp"
-                android:text="스틱형" />
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ListView
+                <RelativeLayout
                     android:layout_gravity="center_horizontal"
-                    android:id="@+id/productlist"
+                    android:id="@+id/map_view"
                     android:layout_width="350dp"
-                    android:layout_height="280dp"
-                    android:layout_marginTop="300dp"
+                    android:layout_height="400dp"
+                    android:layout_marginTop="150dp"
                     android:layout_marginBottom="80dp"
                     android:background="@drawable/green_border"
                     android:padding="10dp" />
