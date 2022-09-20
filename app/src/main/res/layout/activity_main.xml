@@ -31,7 +31,7 @@ activity_main.xml
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="10dp"
                 android:drawablePadding="3dp"
-                android:text="어플 이름"
+                android:text="Medication-Helper"
                 android:textColor="#036635"
                 android:textSize="30sp" />
 
