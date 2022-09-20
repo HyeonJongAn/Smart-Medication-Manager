@@ -20,10 +20,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import org.json.JSONObject;
 
 public class MyPageActivity extends AppCompatActivity{
     TextView TvName;
+    TextView TvID;
     TextView TvBirth;
     TextView TvGender;
     TextView BtnLogout;
@@ -54,6 +60,7 @@ public class MyPageActivity extends AppCompatActivity{
         getSupportActionBar().setCustomView(R.layout.mytitlebar_custom); // 커스텀 사용할 파일 위치
 
         TvName = (TextView) findViewById(R.id.tvName);
+        TvID = (TextView) findViewById(R.id.tvID);
         TvBirth = (TextView) findViewById(R.id.tvBirth);
         TvGender = (TextView) findViewById(R.id.tvGender);
         BtnLogout = (TextView) findViewById(R.id.btnLogout);
@@ -66,7 +73,8 @@ public class MyPageActivity extends AppCompatActivity{
         sqlMedicDB = medicDBHelper.getWritableDatabase();
 
         /* UserData 클래스에서 현재 로그인중인 사용자의 정보를 불러옴 */
-        TvName.setText("아이디 : " + userData.getUserNickName());
+        TvName.setText(userData.getUserNickName());
+        TvID.setText("아이디 : " + userData.getUserID());
         TvBirth.setText("생년월일 : " + userData.getUserBirth());
         TvGender.setText("성별 : " + userData.getUserGender());
 
@@ -83,13 +91,32 @@ public class MyPageActivity extends AppCompatActivity{
         BtnDel.setOnClickListener(new View.OnClickListener() { // 회원탈퇴 버튼을 눌렀을 때
             @Override
             public void onClick(View view) {
-                // 두 DB에서 로그인 중인 회원의 정보를 담고 있는 행을 삭제
-                sqlUserDB.execSQL("DELETE FROM userTBL WHERE uID = '" + userData.getUserID() + "'");
-                sqlMedicDB.execSQL("DELETE FROM medicTBL WHERE uID = '" + userData.getUserID() + "'");
-                userData.Init(); // UserData의 모든 내용 초기화
-                Toast.makeText(getApplicationContext(), "회원탈퇴가 완료되었습니다. 이용해주셔서 감사합니다.", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getApplicationContext(), com.example.smartmedicationmanager.MainActivity.class)); // 로그인 화면으로 돌려보냄
-                finish(); // Progress 완전 종료
+                String userID = userData.getUserID();
+
+                Response.Listener<String> responseListener = new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            boolean success = jsonResponse.getBoolean("success");
+                            if (success) {
+                                userData.Init(); // UserData의 모든 내용 초기화
+                                Toast.makeText(getApplicationContext(), "회원탈퇴가 완료되었습니다. 이용해주셔서 감사합니다.", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(getApplicationContext(), com.example.smartmedicationmanager.MainActivity.class)); // 로그인 화면으로 돌려보냄
+                                finish(); // Progress 완전 종료
+                            }
+                            else {
+                                Toast.makeText(getApplicationContext(), "오류가 발생했습니다.", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                UserDeleteRequest userDeleteRequest = new UserDeleteRequest(userID, responseListener);
+                RequestQueue queue = Volley.newRequestQueue(MyPageActivity.this);
+                queue.add(userDeleteRequest);
             }
         });
 

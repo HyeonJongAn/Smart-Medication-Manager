@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -31,6 +32,7 @@ import org.json.JSONObject;
 
 public class MainActivity extends FragmentActivity {
     UserData userData;
+    String loginID, loginPW;
 
     //뒤로가기 누르면 앱종료시키는 함수
     @Override
@@ -77,11 +79,14 @@ public class MainActivity extends FragmentActivity {
         Button btnlogin = findViewById(R.id.btnlogin);
         TextView btnsignin = findViewById(R.id.btnsignin);
 
+        SharedPreferences auto = getSharedPreferences("autologin", Activity.MODE_PRIVATE);
+
         btnlogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String userID = edtID.getText().toString();
                 String userPassword = edtPW.getText().toString();
+
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -91,7 +96,7 @@ public class MainActivity extends FragmentActivity {
                             if(success){
                                 Toast.makeText(getApplicationContext(), "로그인에 성공했습니다.", Toast.LENGTH_SHORT).show();
 
-                                /*String loginID = jsonResponse.getString("userID");
+                                String loginID = jsonResponse.getString("userID");
                                 String loginPassword = jsonResponse.getString("userPassword");
                                 String loginName = jsonResponse.getString("userName");
                                 String loginBirth = jsonResponse.getString("userBirth");
@@ -101,7 +106,7 @@ public class MainActivity extends FragmentActivity {
                                 userData.setUserPassWord(loginPassword);
                                 userData.setUserNickName(loginName);
                                 userData.setUserBirth(loginBirth);
-                                userData.setUserGender(loginGender); */
+                                userData.setUserGender(loginGender);
 
                                 Intent intent = new Intent(MainActivity.this, MainPageActivity.class);
                                 startActivity(intent);
@@ -123,6 +128,7 @@ public class MainActivity extends FragmentActivity {
 
         // 자동 로그인 구현 부분분
        if (checkBox.isChecked()) {
+          // autoLoginEdit.commit();
         }
 
         btnsignin.setOnClickListener(new View.OnClickListener() {
